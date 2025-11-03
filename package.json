@@ -6,7 +6,8 @@
     "dev": "next dev --webpack",
     "build": "next build --webpack",
     "start": "next start",
-    "upload-backgrounds": "tsx scripts/upload-backgrounds.ts"
+    "upload-backgrounds": "tsx scripts/upload-backgrounds.ts",
+    "upload-demo-images": "tsx scripts/upload-demo-images.ts"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

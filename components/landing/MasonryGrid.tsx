@@ -1,15 +1,15 @@
 "use client";
 
 import { OptimizedImage } from "@/components/ui/optimized-image";
-import { cloudinaryPublicIds } from "@/lib/cloudinary-backgrounds";
+import { demoImagePublicIds } from "@/lib/cloudinary-demo-images";
 
 interface MasonryItem {
   id: number;
   image: string;
 }
 
-// Use Cloudinary public IDs only
-const sampleItems: MasonryItem[] = cloudinaryPublicIds.map((publicId, index) => ({
+// Use demo image Cloudinary public IDs
+const sampleItems: MasonryItem[] = demoImagePublicIds.map((publicId, index) => ({
   id: index + 1,
   image: publicId,
 }));
