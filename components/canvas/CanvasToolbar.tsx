@@ -234,14 +234,18 @@ export function CanvasToolbar() {
   });
 
   // Static background images from public/backgrounds directory
-  // To add your own backgrounds:
-  // 1. Place image files in public/backgrounds/
-  // 2. Add the paths below (relative to public directory)
-  // 3. They will appear as preset options in the Image tab
+  // These images appear as preset options in the Background Image tab
   const staticBackgrounds: string[] = [
-    // Example: "/backgrounds/nature1.jpg"
-    // Example: "/backgrounds/abstract1.png"
-    // Add your image paths here...
+    "/backgrounds/mac-asset-1.jpeg",
+    "/backgrounds/mac-assest-2.jpg",
+    "/backgrounds/mac-asset-3.jpg",
+    "/backgrounds/mac-asset-4.jpg",
+    "/backgrounds/mac-asset-5.jpg",
+    "/backgrounds/mac-asset-6.jpeg",
+    "/backgrounds/mac-asset-7.png",
+    "/backgrounds/mac-asset-8.jpg",
+    "/backgrounds/mac-asset-9.jpg",
+    "/backgrounds/mac-asset-10.jpg",
   ];
 
   const handleExport = async () => {
@@ -643,6 +647,30 @@ export function CanvasToolbar() {
             {/* Background Image */}
             {backgroundType === "image" && (
               <div className="space-y-4">
+                {staticBackgrounds.length > 0 && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Preset Backgrounds</label>
+                    <div className="grid grid-cols-3 gap-2 max-h-64 overflow-y-auto p-1">
+                      {staticBackgrounds.map((bgPath, idx) => (
+                        <button
+                          key={idx}
+                          className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-blue-500 hover:border-2 transition-all group"
+                          onClick={() => updateCanvasBackgroundImage(bgPath)}
+                          title={`Use background ${idx + 1}`}
+                        >
+                          <img
+                            src={bgPath}
+                            alt={`Background ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                          />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Upload Background Image</label>
                   <div
@@ -674,28 +702,6 @@ export function CanvasToolbar() {
                     </div>
                   )}
                 </div>
-
-                {staticBackgrounds.length > 0 && (
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Preset Backgrounds</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {staticBackgrounds.map((bgPath, idx) => (
-                        <button
-                          key={idx}
-                          className="relative aspect-video rounded-lg overflow-hidden border-2 border-gray-200 hover:border-primary transition-colors group"
-                          onClick={() => updateCanvasBackgroundImage(bgPath)}
-                        >
-                          <img
-                            src={bgPath}
-                            alt={`Background ${idx + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
 
                 {backgroundImageUrl && (
                   <div className="space-y-2">

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Stage, Layer, Image, Text, Transformer, Rect, Line } from "react-konva";
+import { Stage, Layer, Image, Text, Transformer, Rect, Line, Group, Circle } from "react-konva";
 import { useCanvasContext } from "./CanvasContext";
 import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/lib/constants";
 import Konva from "konva";
@@ -30,6 +30,7 @@ export function CanvasEditor({
   const [scale, setScale] = useState(1);
   const [showGuides, setShowGuides] = useState(false);
   const [draggingObject, setDraggingObject] = useState<string | null>(null);
+  const [hoveredImageId, setHoveredImageId] = useState<string | null>(null);
 
   // Calculate scale to fit canvas in viewport
   useEffect(() => {
@@ -199,39 +200,38 @@ export function CanvasEditor({
             const isSelected = selectedObject?.id === obj.id;
             
             if (obj.type === "image" && obj.image) {
+              const showDelete = isSelected || hoveredImageId === obj.id;
+              const displayWidth = (obj.width || 0) * (obj.scaleX ?? 1);
+              const displayHeight = (obj.height || 0) * (obj.scaleY ?? 1);
+              
               return (
-                <Image
+                <Group
                   key={obj.id}
                   id={obj.id}
-                  image={obj.image}
                   x={obj.x}
                   y={obj.y}
-                  width={obj.width}
-                  height={obj.height}
-                  scaleX={obj.scaleX ?? 1}
-                  scaleY={obj.scaleY ?? 1}
                   rotation={obj.rotation ?? 0}
                   draggable
-                  onClick={() => handleObjectClick(obj)}
-                  onTap={() => handleObjectClick(obj)}
-                  onDragStart={() => {
+                  onDragStart={(e) => {
                     setDraggingObject(obj.id);
                     setShowGuides(true);
+                    // Select object when dragging starts
+                    handleObjectClick(obj);
                   }}
                   onDragMove={(e) => {
                     const node = e.target;
                     const centerX = width / 2;
                     const centerY = height / 2;
-                    const objCenterX = node.x() + (node.width() * node.scaleX()) / 2;
-                    const objCenterY = node.y() + (node.height() * node.scaleY()) / 2;
+                    const objCenterX = node.x() + displayWidth / 2;
+                    const objCenterY = node.y() + displayHeight / 2;
                     
                     // Snap to center if within 10px
                     const snapThreshold = 10;
                     if (Math.abs(objCenterX - centerX) < snapThreshold) {
-                      node.x(centerX - (node.width() * node.scaleX()) / 2);
+                      node.x(centerX - displayWidth / 2);
                     }
                     if (Math.abs(objCenterY - centerY) < snapThreshold) {
-                      node.y(centerY - (node.height() * node.scaleY()) / 2);
+                      node.y(centerY - displayHeight / 2);
                     }
                   }}
                   onDragEnd={(e) => {
@@ -258,7 +258,81 @@ export function CanvasEditor({
                       angle: node.rotation(),
                     });
                   }}
-                />
+                  onMouseEnter={() => setHoveredImageId(obj.id)}
+                  onMouseLeave={() => setHoveredImageId(null)}
+                  onClick={(e) => {
+                    // Don't select if clicking delete button
+                    const target = e.target as any;
+                    const isDeleteButton = target.getClassName?.() === 'Circle' || 
+                                         (target.parent && target.parent.attrs?.name === 'delete-button');
+                    if (!isDeleteButton) {
+                      handleObjectClick(obj);
+                    }
+                  }}
+                  onTap={(e) => {
+                    const target = e.target as any;
+                    const isDeleteButton = target.getClassName?.() === 'Circle' || 
+                                         (target.parent && target.parent.attrs?.name === 'delete-button');
+                    if (!isDeleteButton) {
+                      handleObjectClick(obj);
+                    }
+                  }}
+                >
+                  <Image
+                    image={obj.image}
+                    x={0}
+                    y={0}
+                    width={obj.width}
+                    height={obj.height}
+                    scaleX={obj.scaleX ?? 1}
+                    scaleY={obj.scaleY ?? 1}
+                  />
+                  
+                  {/* Delete button - appears on hover or selection */}
+                  {showDelete && (
+                    <Group
+                      name="delete-button"
+                      x={displayWidth - 15}
+                      y={-15}
+                      onClick={(e) => {
+                        e.cancelBubble = true;
+                        operations.deleteObject(obj.id);
+                      }}
+                      onTap={(e) => {
+                        e.cancelBubble = true;
+                        operations.deleteObject(obj.id);
+                      }}
+                      listening={true}
+                    >
+                      {/* Background circle */}
+                      <Circle
+                        x={10}
+                        y={10}
+                        radius={12}
+                        fill="#ef4444"
+                        shadowColor="rgba(0, 0, 0, 0.3)"
+                        shadowBlur={4}
+                        shadowOffset={{ x: 0, y: 2 }}
+                        listening={true}
+                      />
+                      {/* X icon */}
+                      <Line
+                        points={[6, 6, 14, 14]}
+                        stroke="white"
+                        strokeWidth={2.5}
+                        lineCap="round"
+                        listening={false}
+                      />
+                      <Line
+                        points={[14, 6, 6, 14]}
+                        stroke="white"
+                        strokeWidth={2.5}
+                        lineCap="round"
+                        listening={false}
+                      />
+                    </Group>
+                  )}
+                </Group>
               );
             }
             
