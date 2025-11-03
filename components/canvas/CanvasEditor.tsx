@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Stage, Layer, Image, Text, Transformer } from "react-konva";
+import { useEffect, useRef, useState } from "react";
+import { Stage, Layer, Image, Text, Transformer, Rect } from "react-konva";
 import { useCanvasContext } from "./CanvasContext";
 import { DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT } from "@/lib/constants";
 import Konva from "konva";
@@ -11,6 +11,7 @@ interface CanvasEditorProps {
   height?: number;
   backgroundColor?: string;
   className?: string;
+  onBackgroundColorChange?: (color: string) => void;
 }
 
 export function CanvasEditor({
@@ -18,11 +19,47 @@ export function CanvasEditor({
   height = DEFAULT_CANVAS_HEIGHT,
   backgroundColor = "#ffffff",
   className = "",
+  onBackgroundColorChange,
 }: CanvasEditorProps) {
   const stageRef = useRef<Konva.Stage>(null);
   const layerRef = useRef<Konva.Layer>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const { initializeCanvas, objects, selectedObject, operations, layer } = useCanvasContext();
+  const [scale, setScale] = useState(1);
+
+  // Calculate scale to fit canvas in viewport
+  useEffect(() => {
+    const updateScale = () => {
+      if (containerRef.current) {
+        const container = containerRef.current;
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+        
+        // Calculate padding (4 * 16px = 64px total padding from parent)
+        const padding = 64;
+        const availableWidth = containerWidth - padding;
+        const availableHeight = containerHeight - padding;
+        
+        const scaleX = availableWidth / width;
+        const scaleY = availableHeight / height;
+        const newScale = Math.min(scaleX, scaleY, 1); // Don't scale up, only down
+        
+        setScale(newScale);
+      }
+    };
+
+    // Initial update
+    const timeoutId = setTimeout(updateScale, 100);
+    updateScale();
+    
+    window.addEventListener('resize', updateScale);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', updateScale);
+    };
+  }, [width, height]);
 
   useEffect(() => {
     if (stageRef.current && layerRef.current) {
@@ -34,6 +71,7 @@ export function CanvasEditor({
     if (stageRef.current) {
       stageRef.current.width(width);
       stageRef.current.height(height);
+      // Don't scale the stage - use CSS transform instead
     }
   }, [width, height]);
 
@@ -71,18 +109,57 @@ export function CanvasEditor({
     }
   };
 
+  // Sync backgroundColor with background rect
+  useEffect(() => {
+    if (layerRef.current) {
+      const bgRect = layerRef.current.findOne((node: any) => node.id() === "canvas-background") as Konva.Rect;
+      if (bgRect && bgRect instanceof Konva.Rect) {
+        bgRect.fill(backgroundColor);
+        layerRef.current.batchDraw();
+      }
+    }
+  }, [backgroundColor, layer]);
+
   return (
-    <div className={`relative border border-gray-200 rounded-lg overflow-hidden bg-gray-50 ${className}`}>
-      <Stage
-        ref={stageRef}
-        width={width}
-        height={height}
-        onClick={handleStageClick}
-        onTap={handleStageClick}
-        style={{ backgroundColor }}
+    <div 
+      ref={containerRef}
+      className={`relative overflow-visible flex items-center justify-center ${className}`}
+      style={{ width: '100%', height: '100%' }}
+    >
+      <div 
+        ref={wrapperRef}
+        style={{ 
+          width: `${width * scale}px`, 
+          height: `${height * scale}px`,
+          position: 'relative',
+          backgroundColor: backgroundColor,
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+        }}
+        className="rounded-lg overflow-hidden"
       >
+        <Stage
+          ref={stageRef}
+          width={width}
+          height={height}
+          onClick={handleStageClick}
+          onTap={handleStageClick}
+          style={{ 
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            backgroundColor: backgroundColor,
+          }}
+        >
         <Layer ref={layerRef}>
-          {/* Background - using Konva.Rect would require importing Rect, but we can set it via stage background */}
+          {/* Background Rectangle */}
+          <Rect
+            id="canvas-background"
+            x={0}
+            y={0}
+            width={width}
+            height={height}
+            fill={backgroundColor}
+            listening={false}
+          />
           
           {/* Render objects */}
           {objects.map((obj) => {
@@ -192,6 +269,7 @@ export function CanvasEditor({
           )}
         </Layer>
       </Stage>
+      </div>
     </div>
   );
 }
