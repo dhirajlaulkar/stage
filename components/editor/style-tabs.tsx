@@ -71,11 +71,31 @@ export function StyleTabs() {
 
   return (
     <Tabs defaultValue="aspect" className="w-full">
-      <TabsList className="grid w-full grid-cols-4 gap-1">
-        <TabsTrigger value="aspect" className="text-xs px-2 py-1.5">Aspect</TabsTrigger>
-        <TabsTrigger value="background" className="text-xs px-2 py-1.5">Background</TabsTrigger>
-        <TabsTrigger value="image" className="text-xs px-2 py-1.5">Image</TabsTrigger>
-        <TabsTrigger value="text" className="text-xs px-2 py-1.5">Text</TabsTrigger>
+      <TabsList className="grid w-full grid-cols-4 gap-1 bg-blue-50/50 p-1">
+        <TabsTrigger 
+          value="aspect" 
+          className="text-xs px-2 py-1.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors"
+        >
+          Aspect
+        </TabsTrigger>
+        <TabsTrigger 
+          value="background" 
+          className="text-xs px-2 py-1.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors"
+        >
+          Background
+        </TabsTrigger>
+        <TabsTrigger 
+          value="image" 
+          className="text-xs px-2 py-1.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors"
+        >
+          Image
+        </TabsTrigger>
+        <TabsTrigger 
+          value="text" 
+          className="text-xs px-2 py-1.5 data-[state=active]:bg-blue-600 data-[state=active]:text-white transition-colors"
+        >
+          Text
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="aspect" className="space-y-4 mt-4">
@@ -94,7 +114,11 @@ export function StyleTabs() {
                 variant={backgroundConfig.type === 'gradient' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setBackgroundType('gradient')}
-                className="flex-1 text-xs"
+                className={`flex-1 text-xs transition-all ${
+                  backgroundConfig.type === 'gradient'
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'border-blue-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
               >
                 Gradient
               </Button>
@@ -102,7 +126,11 @@ export function StyleTabs() {
                 variant={backgroundConfig.type === 'solid' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setBackgroundType('solid')}
-                className="flex-1 text-xs"
+                className={`flex-1 text-xs transition-all ${
+                  backgroundConfig.type === 'solid'
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'border-blue-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
               >
                 Solid
               </Button>
@@ -110,7 +138,11 @@ export function StyleTabs() {
                 variant={backgroundConfig.type === 'image' ? 'default' : 'outline'}
                 size="sm"
                 onClick={() => setBackgroundType('image')}
-                className="flex-1 text-xs"
+                className={`flex-1 text-xs transition-all ${
+                  backgroundConfig.type === 'image'
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                    : 'border-blue-200 hover:border-blue-300 hover:bg-blue-50'
+                }`}
               >
                 Image
               </Button>
@@ -127,8 +159,8 @@ export function StyleTabs() {
                     onClick={() => setBackgroundValue(key)}
                     className={`h-16 rounded-md border-2 transition-all ${
                       backgroundConfig.value === key
-                        ? 'border-primary ring-2 ring-primary'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-blue-600 ring-2 ring-blue-200'
+                        : 'border-gray-200 hover:border-blue-300'
                     }`}
                     style={{
                       background: gradientColors[key],
@@ -150,8 +182,8 @@ export function StyleTabs() {
                     onClick={() => setBackgroundValue(key)}
                     className={`h-10 rounded-md border-2 transition-all ${
                       backgroundConfig.value === key
-                        ? 'border-primary ring-2 ring-primary'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'border-blue-600 ring-2 ring-blue-200'
+                        : 'border-gray-200 hover:border-blue-300'
                     }`}
                     style={{
                       backgroundColor: solidColors[key],
@@ -189,8 +221,8 @@ export function StyleTabs() {
                           }}
                           className={`relative aspect-video rounded-lg overflow-hidden border-2 transition-all ${
                             backgroundConfig.value === publicId
-                              ? 'border-primary ring-2 ring-primary'
-                              : 'border-gray-200 hover:border-gray-300'
+                              ? 'border-blue-600 ring-2 ring-blue-200'
+                              : 'border-gray-200 hover:border-blue-300'
                           }`}
                           title={`Use background ${idx + 1}`}
                         >
@@ -214,16 +246,16 @@ export function StyleTabs() {
                   {...getBgRootProps()}
                   className={`border-2 border-dashed rounded-xl p-6 cursor-pointer transition-all duration-200 flex flex-col items-center justify-center ${
                     isBgDragActive
-                      ? 'border-primary bg-primary/5 scale-[1.02]'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50/50'
+                      ? 'border-blue-600 bg-blue-50 scale-[1.02]'
+                      : 'border-blue-200 hover:border-blue-400 hover:bg-blue-50/50'
                   }`}
                 >
                   <input {...getBgInputProps()} />
-                  <div className={`mb-3 transition-colors flex items-center justify-center w-full ${isBgDragActive ? 'text-primary' : 'text-gray-400'}`}>
+                  <div className={`mb-3 transition-colors flex items-center justify-center w-full ${isBgDragActive ? 'text-blue-600' : 'text-gray-400'}`}>
                     <ImageIcon size={40} weight="duotone" />
                   </div>
                   {isBgDragActive ? (
-                    <p className="text-sm font-medium text-primary text-center">Drop the image here...</p>
+                    <p className="text-sm font-medium text-blue-600 text-center">Drop the image here...</p>
                   ) : (
                     <div className="space-y-1 text-center">
                       <p className="text-xs font-medium text-gray-700">
@@ -249,7 +281,7 @@ export function StyleTabs() {
                   value={typeof backgroundConfig.value === 'string' && !cloudinaryPublicIds.includes(backgroundConfig.value) ? backgroundConfig.value : ''}
                   onChange={(e) => setBackgroundValue(e.target.value)}
                   placeholder="Enter image URL"
-                  className="w-full px-3 py-2 border rounded-md text-sm"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
 

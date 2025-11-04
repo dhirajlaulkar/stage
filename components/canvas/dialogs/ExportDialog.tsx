@@ -21,18 +21,27 @@ export function ExportDialog({ open, onOpenChange, onExport }: ExportDialogProps
     try {
       const dataURL = await onExport(exportFormat, exportQuality);
 
+      if (!dataURL || dataURL === 'data:,') {
+        throw new Error('Invalid image data generated');
+      }
+
       const link = document.createElement("a");
       link.download = `stage-${Date.now()}.${exportFormat}`;
       link.href = dataURL;
       
       document.body.appendChild(link);
       link.click();
-      document.body.removeChild(link);
+      
+      // Small delay before removing to ensure download starts
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
       
       onOpenChange(false);
     } catch (error) {
       console.error("Export failed:", error);
-      alert("Failed to export image. Please try again.");
+      const errorMessage = error instanceof Error ? error.message : "Failed to export image. Please try again.";
+      alert(errorMessage);
     } finally {
       setIsExporting(false);
     }

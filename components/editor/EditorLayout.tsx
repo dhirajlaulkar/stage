@@ -70,8 +70,8 @@ function EditorContent() {
     <SidebarProvider>
       <SidebarLeft />
       <SidebarInset>
-        <div className="min-h-screen flex flex-col relative bg-gray-50">
-          <div className="border-b px-4 py-2 flex items-center gap-2">
+        <div className="min-h-screen flex flex-col relative bg-white">
+          <div className="border-b border-border px-4 py-2 flex items-center gap-2 bg-white">
             <SidebarTrigger />
             <Navigation ctaLabel="Home" ctaHref="/" />
           </div>
