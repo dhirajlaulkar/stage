@@ -324,17 +324,6 @@ export function StyleTabs() {
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Background Image URL</Label>
-                <input
-                  type="text"
-                  value={typeof backgroundConfig.value === 'string' && !cloudinaryPublicIds.includes(backgroundConfig.value) ? backgroundConfig.value : ''}
-                  onChange={(e) => setBackgroundValue(e.target.value)}
-                  placeholder="Enter image URL"
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 bg-white"
-                />
-              </div>
-
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <Label className="text-xs font-medium text-gray-700">Background Blur</Label>

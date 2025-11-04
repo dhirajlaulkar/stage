@@ -14,6 +14,7 @@ interface UploadAreaProps {
 
 export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
   const [isDragActive, setIsDragActive] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const validateFile = React.useCallback((file: File): string | null => {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
@@ -25,18 +26,24 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
     return null;
   }, []);
 
+  const handleFile = React.useCallback(
+    (file: File) => {
+      const validationError = validateFile(file);
+      if (validationError) {
+        return;
+      }
+      onUpload(file);
+    },
+    [validateFile, onUpload]
+  );
+
   const onDrop = React.useCallback(
     (acceptedFiles: File[]) => {
       if (acceptedFiles.length > 0) {
-        const file = acceptedFiles[0];
-        const validationError = validateFile(file);
-        if (validationError) {
-          return;
-        }
-        onUpload(file);
+        handleFile(acceptedFiles[0]);
       }
     },
-    [validateFile, onUpload]
+    [handleFile]
   );
 
   const { getRootProps, getInputProps, isDragActive: dropzoneActive } = useDropzone({
@@ -50,15 +57,48 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
     onDragLeave: () => setIsDragActive(false),
   });
 
+  // Handle paste event
+  React.useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      // Only handle paste if the upload area is focused or visible
+      if (!containerRef.current) return;
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        
+        // Check if the item is an image
+        if (item.type.startsWith("image/")) {
+          e.preventDefault();
+          
+          const file = item.getAsFile();
+          if (file) {
+            handleFile(file);
+          }
+          break;
+        }
+      }
+    };
+
+    // Add paste event listener to the document
+    document.addEventListener("paste", handlePaste);
+
+    return () => {
+      document.removeEventListener("paste", handlePaste);
+    };
+  }, [handleFile]);
+
   const active = isDragActive || dropzoneActive;
 
   return (
-    <div className={cn("w-full max-w-2xl mx-auto", className)}>
+    <div ref={containerRef} className={cn("w-full max-w-2xl mx-auto", className)}>
       <div className="space-y-8">
         <div className="text-center space-y-3">
           <h2 className="text-2xl font-semibold tracking-tight">Upload Image</h2>
           <p className="text-sm text-muted-foreground">
-            Drag and drop or click to upload an image
+            Drag and drop, paste, or click to upload an image
           </p>
         </div>
 
@@ -94,7 +134,7 @@ export function UploadArea({ onUpload, error, className }: UploadAreaProps) {
                 Drag & drop an image here
               </p>
               <p className="text-sm text-muted-foreground">
-                or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB
+                or tap to browse • PNG, JPG, WEBP up to {MAX_IMAGE_SIZE / 1024 / 1024}MB • or paste an image
               </p>
             </div>
           )}
