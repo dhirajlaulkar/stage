@@ -15,7 +15,7 @@ export function Navigation({
   ctaHref = "/home" 
 }: NavigationProps) {
   return (
-    <nav className="w-full border-b border-border backdrop-blur bg-white">
+    <nav className="w-full border-b border-border backdrop-blur bg-background">
       <div className="container mx-auto px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image 
@@ -31,10 +31,10 @@ export function Navigation({
             href="https://github.com/KartikLabhshetwar/stage"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors touch-manipulation"
+            className="p-2 hover:bg-accent rounded-lg transition-colors touch-manipulation text-muted-foreground hover:text-foreground"
             aria-label="GitHub repository"
           >
-            <GithubLogo className="h-5 w-5 text-gray-700 hover:text-gray-900" />
+            <GithubLogo className="h-5 w-5 text-current" weight="fill" />
           </a>
           <Link href={ctaHref}>
             <Button className="bg-blue-600 text-white hover:bg-blue-700 text-sm px-3 sm:px-4 py-2 touch-manipulation">

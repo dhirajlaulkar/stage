@@ -22,20 +22,20 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
   ];
 
   return (
-    <div className="space-y-4">
-      <div className="space-y-3">
+    <div className="space-y-5">
+      <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <Label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+          <Label className="text-sm font-semibold text-foreground">
             Shadow
           </Label>
           <Button
             variant={shadow.enabled ? 'default' : 'outline'}
             size="sm"
             onClick={() => onShadowChange({ enabled: !shadow.enabled })}
-            className={`text-xs transition-all rounded-lg ${
+            className={`text-sm font-medium transition-all rounded-lg h-9 ${
               shadow.enabled
                 ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm'
-                : 'border-border hover:border-border/80 hover:bg-accent text-foreground'
+                : 'border-border hover:border-border/80 hover:bg-accent text-foreground bg-background'
             }`}
           >
             {shadow.enabled ? 'Enabled' : 'Disabled'}
@@ -44,8 +44,8 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
 
         {shadow.enabled && (
           <>
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-700">Preset Shadows</Label>
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-foreground">Preset Shadows</Label>
               <div className="grid grid-cols-2 gap-2">
                 {presetShadows.map((preset, index) => (
                   <Button
@@ -60,7 +60,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                         spread: preset.spread,
                       })
                     }
-                    className={`text-xs transition-all rounded-lg border-border hover:border-border/80 hover:bg-accent text-foreground`}
+                    className={`text-sm font-medium transition-all rounded-lg h-9 border-border hover:border-border/80 hover:bg-accent text-foreground bg-background`}
                   >
                     {preset.label}
                   </Button>
@@ -69,63 +69,65 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
             </div>
 
             <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label className="text-xs font-medium text-gray-700">Blur</Label>
-                <span className="text-xs text-gray-500">{shadow.blur}px</span>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Blur</Label>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[shadow.blur]}
+                    onValueChange={(value) => onShadowChange({ blur: value[0] })}
+                    min={0}
+                    max={50}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.blur}px</span>
+                </div>
               </div>
-              <Slider
-                value={[shadow.blur]}
-                onValueChange={(value) => onShadowChange({ blur: value[0] })}
-                min={0}
-                max={50}
-                step={1}
-              />
+
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Horizontal Offset</Label>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[shadow.offsetX]}
+                    onValueChange={(value) => onShadowChange({ offsetX: value[0] })}
+                    min={-20}
+                    max={20}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetX}px</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Vertical Offset</Label>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[shadow.offsetY]}
+                    onValueChange={(value) => onShadowChange({ offsetY: value[0] })}
+                    min={-20}
+                    max={20}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.offsetY}px</span>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <Label className="text-sm font-medium text-foreground whitespace-nowrap">Spread</Label>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[shadow.spread]}
+                    onValueChange={(value) => onShadowChange({ spread: value[0] })}
+                    min={-10}
+                    max={20}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{shadow.spread}px</span>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label className="text-xs font-medium text-gray-700">Horizontal Offset</Label>
-                <span className="text-xs text-gray-500">{shadow.offsetX}px</span>
-              </div>
-              <Slider
-                value={[shadow.offsetX]}
-                onValueChange={(value) => onShadowChange({ offsetX: value[0] })}
-                min={-20}
-                max={20}
-                step={1}
-              />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label className="text-xs font-medium text-gray-700">Vertical Offset</Label>
-                <span className="text-xs text-gray-500">{shadow.offsetY}px</span>
-              </div>
-              <Slider
-                value={[shadow.offsetY]}
-                onValueChange={(value) => onShadowChange({ offsetY: value[0] })}
-                min={-20}
-                max={20}
-                step={1}
-              />
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <Label className="text-xs font-medium text-gray-700">Spread</Label>
-                <span className="text-xs text-gray-500">{shadow.spread}px</span>
-              </div>
-              <Slider
-                value={[shadow.spread]}
-                onValueChange={(value) => onShadowChange({ spread: value[0] })}
-                min={-10}
-                max={20}
-                step={1}
-              />
-            </div>
-
-            <div className="space-y-3">
-              <Label className="text-xs font-medium text-gray-700">Shadow Color</Label>
+            <div className="space-y-4">
+              <Label className="text-sm font-semibold text-foreground">Shadow Color</Label>
               <div className="flex items-center gap-3">
                 <input
                   type="color"
@@ -167,7 +169,7 @@ export function ShadowControls({ shadow, onShadowChange }: ShadowControlsProps) 
                       className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                   </GlassInputWrapper>
-                  <div className="text-xs text-gray-500 whitespace-nowrap">Opacity</div>
+                  <div className="text-xs text-muted-foreground whitespace-nowrap font-medium">Opacity</div>
                   <GlassInputWrapper className="w-16">
                     <Input
                       type="number"

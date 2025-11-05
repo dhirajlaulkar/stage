@@ -154,20 +154,21 @@ export const TextOverlayControls = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h3 className="font-medium text-sm">Text Overlays</h3>
+        <h3 className="font-semibold text-sm text-foreground">Text Overlays</h3>
         <Button
           variant="outline"
           size="sm"
           onClick={clearTextOverlays}
           disabled={textOverlays.length === 0}
+          className="h-8 px-3 text-xs font-medium rounded-lg"
         >
           Clear All
         </Button>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex gap-2">
           <GlassInputWrapper className="flex-1">
             <Input
@@ -178,15 +179,15 @@ export const TextOverlayControls = () => {
               className="border-0 bg-transparent text-sm focus-visible:ring-0 focus-visible:ring-offset-0"
             />
           </GlassInputWrapper>
-          <Button size="sm" onClick={handleAddText} disabled={!newText.trim()} className="h-9">
+          <Button size="sm" onClick={handleAddText} disabled={!newText.trim()} className="h-9 w-9 rounded-lg">
             <Plus className="h-4 w-4" />
           </Button>
         </div>
       </div>
 
       {textOverlays.length > 0 && (
-        <div className="space-y-3">
-          <p className="text-xs font-medium text-muted-foreground">
+        <div className="space-y-4">
+          <p className="text-sm font-semibold text-foreground">
             Manage Overlays
           </p>
           <div className="space-y-2 max-h-32 overflow-y-auto">
@@ -237,9 +238,9 @@ export const TextOverlayControls = () => {
       )}
 
       {selectedOverlay && (
-        <div className="space-y-4 border-t pt-4">
-          <div className="space-y-4">
-            <p className="text-xs font-medium text-muted-foreground">
+        <div className="space-y-5 border-t pt-5">
+          <div className="space-y-5">
+            <p className="text-sm font-semibold text-foreground">
               {`Edit: "${selectedOverlay.text}"`}
             </p>
 
@@ -257,7 +258,7 @@ export const TextOverlayControls = () => {
                 type="color"
                 value={selectedOverlay.color}
                 onChange={(e) => handleUpdateColor(e.target.value)}
-                className="w-12 h-8 p-1"
+                className="w-12 h-10 p-1 rounded-lg border border-border"
               />
               <GlassInputWrapper className="flex-1">
                 <Input
@@ -349,44 +350,38 @@ export const TextOverlayControls = () => {
               </Select>
             </GlassInputWrapper>
 
-            <div className="space-y-3">
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Font Size</span>
-                <span className="text-xs text-muted-foreground">
-                  {selectedOverlay.fontSize}px
-                </span>
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+              <span className="text-sm font-medium text-foreground whitespace-nowrap">Font Size</span>
+              <div className="flex-1 flex items-center gap-3">
+                <Slider
+                  value={[selectedOverlay.fontSize]}
+                  onValueChange={handleUpdateFontSize}
+                  max={150}
+                  min={12}
+                  step={1}
+                />
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.fontSize}px</span>
               </div>
-              <Slider
-                value={[selectedOverlay.fontSize]}
-                onValueChange={handleUpdateFontSize}
-                max={150}
-                min={12}
-                step={1}
-                className="w-full cursor-grab"
-              />
             </div>
 
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="text-xs text-muted-foreground">Opacity</span>
-                <span className="text-xs text-muted-foreground">
-                  {Math.round(selectedOverlay.opacity * 100)}%
-                </span>
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+              <span className="text-sm font-medium text-foreground whitespace-nowrap">Opacity</span>
+              <div className="flex-1 flex items-center gap-3">
+                <Slider
+                  value={[selectedOverlay.opacity]}
+                  onValueChange={handleUpdateOpacity}
+                  max={1}
+                  min={0}
+                  step={0.01}
+                />
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.opacity * 100)}%</span>
               </div>
-              <Slider
-                value={[selectedOverlay.opacity]}
-                onValueChange={handleUpdateOpacity}
-                max={1}
-                min={0}
-                step={0.01}
-                className="w-full cursor-grab"
-              />
             </div>
 
             {/* Text Shadow Controls */}
-            <div className="space-y-3 border-t pt-4">
+            <div className="space-y-4 border-t pt-5">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-medium text-muted-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   Text Shadow
                 </p>
                 <Button
@@ -404,7 +399,7 @@ export const TextOverlayControls = () => {
               </div>
 
               {selectedOverlay.textShadow.enabled && (
-                <div className="space-y-3">
+                <div className="space-y-4">
                   {/* Shadow Color */}
                   <div className="flex gap-2">
                     <Input
@@ -413,7 +408,7 @@ export const TextOverlayControls = () => {
                       onChange={(e) =>
                         handleUpdateTextShadow({ color: e.target.value })
                       }
-                      className="w-12 h-8 p-1"
+                      className="w-12 h-10 p-1 rounded-lg border border-border"
                     />
                     <GlassInputWrapper className="flex-1">
                       <Input
@@ -428,116 +423,91 @@ export const TextOverlayControls = () => {
                   </div>
 
                   {/* Shadow Blur */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        Blur
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {selectedOverlay.textShadow.blur}px
-                      </span>
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                    <span className="text-sm font-medium text-foreground whitespace-nowrap">Blur</span>
+                    <div className="flex-1 flex items-center gap-3">
+                      <Slider
+                        value={[selectedOverlay.textShadow.blur]}
+                        onValueChange={(value) =>
+                          handleUpdateTextShadow({ blur: value[0] })
+                        }
+                        max={20}
+                        min={0}
+                        step={1}
+                      />
+                      <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.textShadow.blur}px</span>
                     </div>
-                    <Slider
-                      value={[selectedOverlay.textShadow.blur]}
-                      onValueChange={(value) =>
-                        handleUpdateTextShadow({ blur: value[0] })
-                      }
-                      max={20}
-                      min={0}
-                      step={1}
-                      className="w-full cursor-grab"
-                    />
                   </div>
 
                   {/* Shadow Offset X */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        Offset X
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {selectedOverlay.textShadow.offsetX}px
-                      </span>
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                    <span className="text-sm font-medium text-foreground whitespace-nowrap">Offset X</span>
+                    <div className="flex-1 flex items-center gap-3">
+                      <Slider
+                        value={[selectedOverlay.textShadow.offsetX]}
+                        onValueChange={(value) =>
+                          handleUpdateTextShadow({ offsetX: value[0] })
+                        }
+                        max={20}
+                        min={-20}
+                        step={1}
+                      />
+                      <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.textShadow.offsetX}px</span>
                     </div>
-                    <Slider
-                      value={[selectedOverlay.textShadow.offsetX]}
-                      onValueChange={(value) =>
-                        handleUpdateTextShadow({ offsetX: value[0] })
-                      }
-                      max={20}
-                      min={-20}
-                      step={1}
-                      className="w-full cursor-grab"
-                    />
                   </div>
 
                   {/* Shadow Offset Y */}
-                  <div className="space-y-1">
-                    <div className="flex justify-between">
-                      <span className="text-xs text-muted-foreground">
-                        Offset Y
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {selectedOverlay.textShadow.offsetY}px
-                      </span>
+                  <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                    <span className="text-sm font-medium text-foreground whitespace-nowrap">Offset Y</span>
+                    <div className="flex-1 flex items-center gap-3">
+                      <Slider
+                        value={[selectedOverlay.textShadow.offsetY]}
+                        onValueChange={(value) =>
+                          handleUpdateTextShadow({ offsetY: value[0] })
+                        }
+                        max={20}
+                        min={-20}
+                        step={1}
+                      />
+                      <span className="text-sm text-foreground font-medium whitespace-nowrap">{selectedOverlay.textShadow.offsetY}px</span>
                     </div>
-                    <Slider
-                      value={[selectedOverlay.textShadow.offsetY]}
-                      onValueChange={(value) =>
-                        handleUpdateTextShadow({ offsetY: value[0] })
-                      }
-                      max={20}
-                      min={-20}
-                      step={1}
-                      className="w-full cursor-grab"
-                    />
                   </div>
                 </div>
               )}
             </div>
 
-            <div className="space-y-2">
-              <p className="text-xs font-medium text-muted-foreground">
+            <div className="space-y-4">
+              <p className="text-sm font-semibold text-foreground">
                 Position
               </p>
               {/* X position */}
-              <div className="space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-xs text-muted-foreground">
-                    X Position
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.round(selectedOverlay.position.x)}%
-                  </span>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">X Position</span>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[selectedOverlay.position.x]}
+                    onValueChange={(value) => handleUpdatePosition('x', value)}
+                    max={100}
+                    min={0}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.x)}%</span>
                 </div>
-                <Slider
-                  value={[selectedOverlay.position.x]}
-                  onValueChange={(value) => handleUpdatePosition('x', value)}
-                  max={100}
-                  min={0}
-                  step={1}
-                  className="w-full cursor-grab"
-                />
               </div>
 
               {/* Y position */}
-              <div className="space-y-1">
-                <div className="flex justify-between">
-                  <span className="text-xs text-muted-foreground">
-                    Y Position
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {Math.round(selectedOverlay.position.y)}%
-                  </span>
+              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+                <span className="text-sm font-medium text-foreground whitespace-nowrap">Y Position</span>
+                <div className="flex-1 flex items-center gap-3">
+                  <Slider
+                    value={[selectedOverlay.position.y]}
+                    onValueChange={(value) => handleUpdatePosition('y', value)}
+                    max={100}
+                    min={0}
+                    step={1}
+                  />
+                  <span className="text-sm text-foreground font-medium whitespace-nowrap">{Math.round(selectedOverlay.position.y)}%</span>
                 </div>
-                <Slider
-                  value={[selectedOverlay.position.y]}
-                  onValueChange={(value) => handleUpdatePosition('y', value)}
-                  max={100}
-                  min={0}
-                  step={1}
-                  className="w-full cursor-grab"
-                />
               </div>
             </div>
           </div>

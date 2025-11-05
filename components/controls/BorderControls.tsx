@@ -400,28 +400,20 @@ export function BorderControls() {
 
         {['solid', 'glassy', 'dotted', 'eclipse', 'ruler', 'focus'].includes(imageBorder.type) && (
 
-          <div>
-
-            <label className="text-xs text-muted-foreground mb-2 block">
-
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+            <label className="text-sm font-medium text-foreground whitespace-nowrap">
               Width
-
             </label>
-
-            <Slider
-
-              value={[imageBorder.width]}
-
-              onValueChange={([value]) => setImageBorder({ width: value })}
-
-              min={1}
-
-              max={50}
-
-              step={0.5}
-
-            />
-
+            <div className="flex-1 flex items-center gap-3">
+              <Slider
+                value={[imageBorder.width]}
+                onValueChange={([value]) => setImageBorder({ width: value })}
+                min={1}
+                max={50}
+                step={0.5}
+              />
+              <span className="text-sm text-foreground font-medium whitespace-nowrap">{imageBorder.width}px</span>
+            </div>
           </div>
 
         )}
@@ -446,28 +438,20 @@ export function BorderControls() {
 
             </div>
 
-            <div>
-
-              <label className="text-xs text-muted-foreground mb-2 block">
-
+            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50 border border-border/50">
+              <label className="text-sm font-medium text-foreground whitespace-nowrap">
                 Padding
-
               </label>
-
-              <Slider
-
-                value={[imageBorder.padding || 20]}
-
-                onValueChange={([value]) => setImageBorder({ padding: value })}
-
-                min={0}
-
-                max={100}
-
-                step={1}
-
-              />
-
+              <div className="flex-1 flex items-center gap-3">
+                <Slider
+                  value={[imageBorder.padding || 20]}
+                  onValueChange={([value]) => setImageBorder({ padding: value })}
+                  min={0}
+                  max={100}
+                  step={1}
+                />
+                <span className="text-sm text-foreground font-medium whitespace-nowrap">{imageBorder.padding || 20}px</span>
+              </div>
             </div>
 
           </>

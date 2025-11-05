@@ -249,8 +249,8 @@ function Sidebar({
             variant === "floating" || variant === "inset"
               ? "group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:rounded-xl group-data-[variant=floating]:border group-data-[variant=floating]:shadow-sm"
               : side === "left"
-              ? "rounded-r-2xl border-r border-sidebar-border"
-              : "rounded-l-2xl border-l border-sidebar-border"
+              ? "rounded-tl-2xl rounded-tr-none rounded-br-none rounded-bl-none border-r border-sidebar-border"
+              : "rounded-tr-2xl rounded-tl-none rounded-bl-none rounded-br-none border-l border-sidebar-border"
           )}
         >
           {children}
