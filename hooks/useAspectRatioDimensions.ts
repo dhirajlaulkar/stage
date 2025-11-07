@@ -87,9 +87,16 @@ export function useResponsiveCanvasDimensions() {
     }
     
     // Calculate viewport constraints
-    // Use a reasonable max size that works well on most screens
-    const maxWidth = Math.min(viewportSize.width * 0.95, 1920);
-    const maxHeight = Math.min(viewportSize.height * 0.85, 1080);
+    // Account for side panels (left: ~320px, right: ~320px) and padding
+    // More conservative values to ensure canvas always fits
+    const sidePanelsWidth = 640; // Approximate width of left + right panels
+    const padding = 48; // Container padding (24px * 2)
+    const availableWidth = viewportSize.width - sidePanelsWidth - padding;
+    const availableHeight = viewportSize.height - 200; // Account for header/bottom bar
+    
+    // Use more conservative percentages to ensure canvas fits
+    const maxWidth = Math.min(availableWidth * 0.9, 1920);
+    const maxHeight = Math.min(availableHeight * 0.75, 1080);
     
     const fitDimensions = calculateFitDimensions(
       preset.width,

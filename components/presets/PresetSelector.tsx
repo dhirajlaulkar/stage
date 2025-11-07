@@ -15,6 +15,14 @@ import { cn } from '@/lib/utils';
 export function PresetSelector() {
   const {
     uploadedImageUrl,
+    selectedAspectRatio,
+    backgroundConfig,
+    backgroundBorderRadius,
+    borderRadius,
+    imageOpacity,
+    imageScale,
+    imageBorder,
+    imageShadow,
     setAspectRatio,
     setBackgroundConfig,
     setBackgroundType,
@@ -29,6 +37,30 @@ export function PresetSelector() {
   } = useImageStore();
 
   const [open, setOpen] = React.useState(false);
+
+  // Check if a preset matches the current settings
+  const isPresetActive = React.useCallback((preset: PresetConfig) => {
+    return (
+      preset.aspectRatio === selectedAspectRatio &&
+      preset.backgroundConfig.type === backgroundConfig.type &&
+      preset.backgroundConfig.value === backgroundConfig.value &&
+      preset.backgroundBorderRadius === backgroundBorderRadius &&
+      preset.borderRadius === borderRadius &&
+      preset.imageOpacity === imageOpacity &&
+      preset.imageScale === imageScale &&
+      preset.imageBorder.enabled === imageBorder.enabled &&
+      preset.imageShadow.enabled === imageShadow.enabled
+    );
+  }, [
+    selectedAspectRatio,
+    backgroundConfig,
+    backgroundBorderRadius,
+    borderRadius,
+    imageOpacity,
+    imageScale,
+    imageBorder.enabled,
+    imageShadow.enabled,
+  ]);
 
   const applyPreset = React.useCallback((preset: PresetConfig) => {
     // Set all parameters from the preset
@@ -81,22 +113,24 @@ export function PresetSelector() {
             </p>
           </div>
           
-          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-1">
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 -mr-1">
             {presets.map((preset) => (
               <button
                 key={preset.id}
                 onClick={() => applyPreset(preset)}
                 className={cn(
-                  'w-full text-left p-3 rounded-lg border transition-all',
-                  'hover:bg-accent hover:border-border/80',
-                  'focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2',
+                  'w-full text-left p-3 rounded-lg border-2 transition-all',
+                  isPresetActive(preset)
+                    ? 'border-primary bg-primary/5 hover:bg-primary/10'
+                    : 'border-border bg-background hover:bg-accent hover:border-border/80',
+                  'focus:outline-none',
                   'group'
                 )}
               >
                 <div className="flex items-start gap-3">
                   {/* Preview thumbnail */}
                   <div
-                    className="w-16 h-16 rounded-md overflow-hidden border border-border shrink-0"
+                    className="w-16 h-16 rounded-md overflow-hidden border-2 border-border shrink-0"
                     style={getBackgroundCSS(preset.backgroundConfig)}
                   />
                   

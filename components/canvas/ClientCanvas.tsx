@@ -291,12 +291,12 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
     <div
       ref={containerRef}
       id="image-render-card"
-      className="flex items-center justify-center relative overflow-hidden"
+      className="flex items-center justify-center relative"
       style={{
         width: '100%',
         maxWidth: `${containerWidth}px`,
         aspectRatio: responsiveDimensions.aspectRatio,
-        maxHeight: '90vh',
+        maxHeight: 'calc(100vh - 200px)',
         backgroundColor: 'transparent',
         padding: '24px',
       }}
@@ -309,6 +309,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
           minWidth: `${canvasW}px`,
           minHeight: `${canvasH}px`,
           overflow: 'hidden',
+          borderRadius: `${backgroundBorderRadius}px`,
         }}
       >
         {/* Background layer - DOM element for html2canvas compatibility */}
@@ -334,6 +335,7 @@ function CanvasRenderer({ image }: { image: HTMLImageElement }) {
             pointerEvents: 'none',
             zIndex: 20,
             overflow: 'hidden',
+            borderRadius: `${backgroundBorderRadius}px`,
           }}
         >
           <TextOverlayRenderer />
