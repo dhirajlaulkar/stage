@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
 
     const encodedUrl = encodeURIComponent(validUrl.toString())
 
-
-    const apiUrl = `https://shot.screenshotapi.net/v3/screenshot?token=${screenshotApiKey}&url=${encodedUrl}&output=image&width=1920&height=1080&file_type=PNG&full_page=false`
+    // Use dark_mode=true to respect website's default dark theme
+    const apiUrl = `https://shot.screenshotapi.net/v3/screenshot?token=${screenshotApiKey}&url=${encodedUrl}&output=image&width=1920&height=1080&file_type=PNG&full_page=false&dark_mode=true`
 
     try {
       const response = await fetch(apiUrl, {
